@@ -4,13 +4,11 @@ import {
   getAuth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-} from "firebase/auth";
-import { authService } from "fbase";
-import {
   signInWithPopup,
   GoogleAuthProvider,
   GithubAuthProvider,
 } from "firebase/auth";
+// import { authService } from "fbase";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
