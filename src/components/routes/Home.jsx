@@ -1,5 +1,5 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 import {
   collection,
   addDoc,
@@ -7,14 +7,17 @@ import {
   getDocs,
   doc,
   onSnapshot,
+  setDoc,
 } from "firebase/firestore";
-import { dbService } from "fbase.js";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { dbService, storage } from "fbase.js";
 import Jweet from "components/Jweet";
 
 const Home = ({ userObj }) => {
   // console.log(userObj);
   const [jweet, setJweet] = useState("");
   const [jweets, setJweets] = useState([]);
+  const [attachment, setAttachment] = useState();
   // const getJweets = async () => {
   //   const dbJweets = await getDocs(collection(dbService, "jweets"));
   //   dbJweets.forEach((doc) => {
@@ -39,14 +42,23 @@ const Home = ({ userObj }) => {
   }, []);
   const onSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const docRef = await addDoc(collection(dbService, "jweets"), {
-        text: jweet,
-        createdAt: Date.now(),
-        creatorId: userObj.uid,
-      });
-    } catch (error) {}
+    const attachmentRef = ref(storage, `${userObj.uid}/${uuidv4()}`);
+    const metadata = {
+      contentType: "image/jpeg",
+    };
+    const response = await uploadBytes(attachmentRef, "data_url", metadata); //
+    console.log(response);
+    const attachmentUrl = await getDownloadURL(ref(storage, attachmentRef));
+    const jweetObj = {
+      text: jweet,
+      createdAt: Date.now(),
+      creatorId: userObj.uid,
+      attachmentUrl,
+    };
+    await addDoc(collection(dbService, "jweets"), jweetObj);
+
     setJweet("");
+    setAttachment("");
   };
 
   const onChange = (e) => {
@@ -54,6 +66,25 @@ const Home = ({ userObj }) => {
       target: { value },
     } = e;
     setJweet(value);
+  };
+  const onFileChange = (e) => {
+    const {
+      target: { files },
+    } = e;
+    const theFile = files[0];
+    const reader = new FileReader();
+    reader.onloadend = (finishedEvent) => {
+      //readAsDataURL이 끝나면 finishedEvent를 받음
+      console.log(finishedEvent);
+      const {
+        currentTarget: { result },
+      } = finishedEvent;
+      setAttachment(result);
+    };
+    reader.readAsDataURL(theFile); // 파일을 읽기 시작
+  };
+  const onClearAttachment = () => {
+    setAttachment(null);
   };
   return (
     <div>
@@ -65,7 +96,14 @@ const Home = ({ userObj }) => {
           placeholder="What's on your mind"
           maxLength={120}
         />
+        <input type="file" accept="image/*" onChange={onFileChange} />
         <input type="submit" value="Jweet" />
+        {attachment && (
+          <div>
+            <img src={attachment} width="50px" height="50px" />
+            <button onClick={onClearAttachment}>Clear</button>
+          </div>
+        )}
       </form>
       <div>
         {jweets.map((jweet) => (
