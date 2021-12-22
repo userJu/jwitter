@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.js": "/userJu.github.io/jwitter/static/js/main.8f1e2766.chunk.js",
+    "main.js.map": "/userJu.github.io/jwitter/static/js/main.8f1e2766.chunk.js.map",
+    "runtime-main.js": "/userJu.github.io/jwitter/static/js/runtime-main.833d60ad.js",
+    "runtime-main.js.map": "/userJu.github.io/jwitter/static/js/runtime-main.833d60ad.js.map",
+    "static/js/2.0c2fce03.chunk.js": "/userJu.github.io/jwitter/static/js/2.0c2fce03.chunk.js",
+    "static/js/2.0c2fce03.chunk.js.map": "/userJu.github.io/jwitter/static/js/2.0c2fce03.chunk.js.map",
+    "index.html": "/userJu.github.io/jwitter/index.html",
+    "static/js/2.0c2fce03.chunk.js.LICENSE.txt": "/userJu.github.io/jwitter/static/js/2.0c2fce03.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.833d60ad.js",
+    "static/js/2.0c2fce03.chunk.js",
+    "static/js/main.8f1e2766.chunk.js"
+  ]
+}
